@@ -13,62 +13,12 @@ import {
 
 import type { GithubMdResponse, LoaderFunction } from "./types";
 
-type LoaderData = {
-  attributes: {
-    siteName?: string;
-    siteDescription?: string;
-  };
-  contentUrl: string;
-};
-
-export const loader: LoaderFunction = async ({ context: { ctx } }) => {
-  let username = ctx.env.GITHUB_USERNAME;
-  let repository = ctx.env.GITHUB_REPOSITORY;
-
-  if (!username || !repository) {
-    throw new Error("Github username and repository are required");
-  }
-
-  let configResponse = await fetch(
-    `https://github-md.com/${username}/${repository}/main/config.md`
-  );
-
-  let markdown = await configResponse.json<
-    GithubMdResponse<{ siteName?: string; siteDescription?: string }>
-  >();
-  if ("error" in markdown) {
-    console.error(markdown.error);
-    throw new Error(markdown.error);
-  }
-
-  return json<LoaderData>({
-    attributes: {
-      siteName: markdown.attributes.siteName,
-      siteDescription: markdown.attributes.siteDescription,
-    },
-    contentUrl: `https://github.com/${username}/${repository}`,
-  });
-};
-
-export const meta: MetaFunction = ({ data }: { data?: LoaderData }) => {
-  let { siteName, siteDescription } = data?.attributes || {};
-  return {
-    charset: "utf-8",
-    title: siteName,
-    description: siteDescription,
-    viewport: "width=device-width,initial-scale=1",
-  };
-};
 
 function Document({ children }: { children: ReactNode }) {
-  let data = useMatches().find((match) => match.id === "root")?.data as
-    | LoaderData
-    | undefined;
 
   return (
     <html lang="en">
       <head>
-        <Meta />
         <Links />
         <link
           rel="stylesheet"
