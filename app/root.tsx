@@ -77,29 +77,9 @@ function Document({ children }: { children: ReactNode }) {
       </head>
       <body>
         <header>
-          {data?.attributes.siteName && <h1>{data.attributes.siteName}</h1>}
+        <h1>Test heading</h1>
           <nav>
             <Link to="/">Home</Link>
-            {" / "}
-            <a
-              href="https://github.com/jacob-ebey/remix-cloudflare-blog-example"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Source
-            </a>
-            {data && (
-              <>
-                {" / "}
-                <a
-                  href={data?.contentUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Content
-                </a>
-              </>
-            )}
           </nav>
         </header>
         {children}
